@@ -11,11 +11,12 @@ router.post('/login', async (req, res) => {
 
     try {
         const token = await authService.login(email, password);
-        res.cookie('auth', token);
-        res.redirect('/');
+        res.cookie('auth', token, {httpOnly: true});
     } catch (error) {
         return res.render('auth/login', {error});
     }
+
+    res.redirect('/');
 
 });
 

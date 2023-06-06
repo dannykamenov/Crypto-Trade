@@ -4,7 +4,9 @@ const jwt = require('../utils/jwt');
 const SECRET = 'somesecret'
 
 exports.register = async (username, email, password, repeatPassword) => {
-
+    if(password !== repeatPassword){
+        throw new Error('Passwords don\'t match!');
+    }
     //const existingUser = await this.findByUsername(username);
     const existingUser = await User.findOne(
         {$or: [
@@ -23,12 +25,12 @@ exports.register = async (username, email, password, repeatPassword) => {
 exports.login = async (email, password) => {
 
     const user = await User.findOne({email});
-
+    
     if(!user){
         throw new Error('Wrong email or password!');
     }
 
-    const isMatch = user.validatePassword(password);
+    const isMatch = await user.validatePassword(password);
 
     if(!isMatch){
         throw new Error('Wrong email or password!');
