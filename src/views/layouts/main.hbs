@@ -26,7 +26,13 @@
         </ul>
       </nav>
     </header>
-
+    {{#if error}}
+    <div>
+      <div class="errorContainer">
+        <p>{{error.message}}</p>
+      </div>
+    </div>
+    {{/if}}
     {{{body}}}
 
     <footer>

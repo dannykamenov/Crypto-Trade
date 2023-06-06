@@ -9,10 +9,14 @@ router.get('/login', (req, res) => {
 router.post('/login', async (req, res) => {
     const {email, password} = req.body;
 
-    const token = await authService.login(email, password);
+    try {
+        const token = await authService.login(email, password);
+        res.cookie('auth', token);
+        res.redirect('/');
+    } catch (error) {
+        return res.render('auth/login', {error});
+    }
 
-    res.cookie('auth', token);
-    res.redirect('/');
 });
 
 router.get('/register', (req, res) => {
@@ -21,11 +25,14 @@ router.get('/register', (req, res) => {
 
 router.post('/register', async (req, res) => {
     const {username, email, password, rePassword} = req.body;
-
-    await authService.register(username, email, password, rePassword)
-
-    res.redirect('/');
-
+    try {
+        await authService.register(username, email, password, rePassword);
+        const token = await authService.login(email, password);
+        res.cookie('auth', token);
+        res.redirect('/');
+    } catch (error) {
+        return res.render('auth/register', {error});
+    }
 });
 
 router.get('/logout', (req, res) => {

@@ -25,13 +25,13 @@ exports.login = async (email, password) => {
     const user = await User.findOne({email});
 
     if(!user){
-        throw new Error('Wrong email ');
+        throw new Error('Wrong email or password!');
     }
 
     const isMatch = user.validatePassword(password);
 
     if(!isMatch){
-        throw new Error('Wrong  password!');
+        throw new Error('Wrong email or password!');
     }
 
     const payload = {_id: user._id, email, username: user.username};
